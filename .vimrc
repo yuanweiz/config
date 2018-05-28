@@ -1,126 +1,100 @@
 set nocompatible              " be iMproved, required
 filetype off                  " required
 set encoding=utf-8
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
- call vundle#begin()
- " alternatively, pass a path where Vundle should install plugins
- "call vundle#begin('~/some/path/here')
- 
- " let Vundle manage Vundle, required
- Plugin 'VundleVim/Vundle.vim'
- Plugin 'Valloric/YouCompleteMe'
- Plugin 'rdnetto/YCM-Generator'
- Plugin 'tikhomirov/vim-glsl'
- Plugin 'Harenome/vim-mipssyntax'
- Plugin 'scrooloose/nerdtree'
- 
- " The following are examples of different formats supported.
- " Keep Plugin commands between vundle#begin/end.
- " plugin on GitHub repo
- " Plugin 'tpope/vim-fugitive'
- " plugin from http://vim-scripts.org/vim/scripts.html
- " Plugin 'L9'
- " Git plugin not hosted on GitHub
- " Plugin 'git://git.wincent.com/command-t.git'
- " git repos on your local machine (i.e. when working on your own plugin)
- " Plugin 'file:///home/gmarik/path/to/plugin'
- " The sparkup vim script is in a subdirectory of this repo called vim.
- " Pass the path to set the runtimepath properly.
- " Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
- " Install L9 and avoid a Naming conflict if you've already installed a
- " different version somewhere else.
- " Plugin 'ascenator/L9', {'name': 'newL9'}
- 
- " All of your Plugins must be added before the following line
- call vundle#end()            " required
- filetype plugin indent on    " required
- " To ignore plugin indent changes, instead use:
- "filetype plugin on
- "
- " Brief help
- " :PluginList       - lists configured plugins
- " :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
- " :PluginSearch foo - searches for foo; append `!` to refresh local cache
- " :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
- "
- " see :h vundle for more details or wiki for FAQ
- " Put your non-Plugin stuff after this line
- "
- "
- syntax on
- 
- """""""""""""""""""YCM""""""""""""
- let g:ycm_confirm_extra_conf = 0 "confirm loading .ycm_extra_conf.py at startup
- let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py' "fallback
- let g:ycm_collect_identifiers_from_tags_files = 0
- "let g:ycm_semantic_triggers =  {
- "  \   'c' : ['->', '.'],
- "  \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
- "  \             're!\[.*\]\s'],
- "  \   'ocaml' : ['.', '#'],
- "  \   'cpp,objcpp' : ['->', '.', '::'],
- "  \   'perl' : ['->'],
- "  \   'php' : ['->', '::'],
- "  \   'cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go' : ['.'],
- "  \   'ruby' : ['.', '::'],
- "  \   'lua' : ['.', ':'],
- "  \   'erlang' : [':'],
- "  \ }
- 
- """""""""""""""" YWZ's configuration """"""""""""""""""
- nmap <C-N> :NERDTree<CR>
- nmap <C-J> :bn<CR>
- nmap <C-k> :bp<CR>
- nmap <C-c> <ESC>
- nmap <F2> :set hlsearch!<CR>
- nmap <F3> :set paste!<CR>
- nmap <F5> :set number!<CR>
- imap <C-K> <C-Space>
- nnoremap tn :tabnew
- nnoremap tj :tabnext<CR>
- nnoremap tk :tabnext<CR>
- " nnoremap <C-L> <C-]>
- nnoremap <C-]> :YcmCompleter GoTo<CR>
- set shiftwidth=4
- set softtabstop=4
- set tabstop=4
- set expandtab
- " ## added by OPAM user-setup for vim / base ## 93ee63e278bdfc07d1139a748ed3fff2 ## you can edit, but keep this line
- set rtp+=~/.opam/system/share/merlin/vim
- let s:opam_share_dir = system("opam config var share")
- let s:opam_share_dir = substitute(s:opam_share_dir, '[\r\n]*$', '', '')
- 
- let s:opam_configuration = {}
- 
- function! OpamConfOcpIndent()
-   execute "set rtp^=" . s:opam_share_dir . "/ocp-indent/vim"
- endfunction
- let s:opam_configuration['ocp-indent'] = function('OpamConfOcpIndent')
- 
- function! OpamConfOcpIndex()
-   execute "set rtp+=" . s:opam_share_dir . "/ocp-index/vim"
- endfunction
- let s:opam_configuration['ocp-index'] = function('OpamConfOcpIndex')
- 
- function! OpamConfMerlin()
-   let l:dir = s:opam_share_dir . "/merlin/vim"
-   execute "set rtp+=" . l:dir
- endfunction
- let s:opam_configuration['merlin'] = function('OpamConfMerlin')
- 
- let s:opam_packages = ["ocp-indent", "ocp-index", "merlin"]
- let s:opam_check_cmdline = ["opam list --installed --short --safe --color=never"] + s:opam_packages
- let s:opam_available_tools = split(system(join(s:opam_check_cmdline)))
- for tool in s:opam_packages
-   " Respect package order (merlin should be after ocp-index)
-   if count(s:opam_available_tools, tool) > 0
-     call s:opam_configuration[tool]()
-   endif
- endfor
- " ## end of OPAM user-setup addition for vim / base ## keep this line
- "
- "
- " ctags
-set tags=./tags;,tags
+filetype plugin indent on    " required
+syntax on
 
+""""""""""""""Plugin""""""""""""""""
+" Specify a directory for plugins
+" " - For Neovim: ~/.local/share/nvim/plugged
+" " - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
+" Make sure you use single quotes
+" On-demand loading
+Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+Plug 'ludovicchabant/vim-gutentags'
+Plug 'Valloric/YouCompleteMe'
+" Using a non-master branch
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
+Plug 'jiangmiao/auto-pairs'
+
+" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
+" Plug 'fatih/vim-go', { 'tag': '*' }
+Plug 'fatih/vim-go'
+
+" Plugin options
+Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
+" Initialize plugin system
+Plug 'skywind3000/asyncrun.vim'
+Plug 'w0rp/ale'
+call plug#end()
+Plug 'sillybun/vim-repl'
+Plug 'tpope/vim-sensible'
+"""""""""""""""""""YCM""""""""""""
+let g:ycm_confirm_extra_conf = 0 "confirm loading .ycm_extra_conf.py at startup
+let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py' "fallback
+let g:ycm_collect_identifiers_from_tags_files = 0
+"let g:ycm_semantic_triggers =  {
+"  \   'c' : ['->', '.'],
+"  \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
+"  \             're!\[.*\]\s'],
+"  \   'ocaml' : ['.', '#'],
+"  \   'cpp,objcpp' : ['->', '.', '::'],
+"  \   'perl' : ['->'],
+"  \   'php' : ['->', '::'],
+"  \   'cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go' : ['.'],
+"  \   'ruby' : ['.', '::'],
+"  \   'lua' : ['.', ':'],
+"  \   'erlang' : [':'],
+"  \ }
+""""""""""""""""""""" vim-gutentags """"""""""""""""""""""""""""
+" ctags
+set tags=./tags;,tags
+let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+let g:gutentags_ctags_tagfile = '.tags'
+let s:vim_tags = expand('~/.cache/tags')
+let g:gutentags_cache_dir = s:vim_tags
+let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+if !isdirectory(s:vim_tags)
+    silent! call mkdir(s:vim_tags, 'p')
+endif
+
+"""""""""""""""""""asyncrun""""""""""""""""""
+let g:asyncrun_open = 6
+let g:asyncrun_bell = 1
+nnoremap <F10> :call asyncrun#quickfix_toggle(6)<cr>
+""""""""""""""""""ale linting""""""""""""""
+let g:ale_linters_explicit = 1
+let g:ale_completion_delay = 500
+let g:ale_echo_delay = 20
+let g:ale_lint_delay = 500
+let g:ale_echo_msg_format = '[%linter%] %code: %%s'
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
+let g:airline#extensions#ale#enabled = 1
+
+let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
+let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++11'
+let g:ale_c_cppcheck_options = ''
+let g:ale_cpp_cppcheck_options = ''
+
+"""""""""""""""" YWZ's configuration """"""""""""""""""
+nmap <C-N> :NERDTree<CR>
+nmap <C-J> :bn<CR>
+nmap <C-k> :bp<CR>
+nmap <C-c> <ESC>
+nmap <F2> :set hlsearch!<CR>
+nmap <F3> :set paste!<CR>
+nmap <F5> :set number!<CR>
+imap <C-K> <C-Space>
+nnoremap tn :tabnew
+nnoremap tj :tabnext<CR>
+nnoremap tk :tabnext<CR>
+" nnoremap <C-L> <C-]>
+nnoremap <C-]> :YcmCompleter GoTo<CR>
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+set expandtab
