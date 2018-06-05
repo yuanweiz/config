@@ -3,6 +3,7 @@ filetype off                  " required
 set encoding=utf-8
 filetype plugin indent on    " required
 syntax on
+let mapleader="\<space>"
 
 """"""""""""""Plugin""""""""""""""""
 " Specify a directory for plugins
@@ -27,39 +28,44 @@ Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 " Initialize plugin system
 Plug 'skywind3000/asyncrun.vim'
 Plug 'w0rp/ale'
-call plug#end()
 Plug 'sillybun/vim-repl'
 Plug 'tpope/vim-sensible'
+Plug 'skywind3000/vim-preview'
+Plug 'skywind3000/gutentags_plus'
+" Plug 'ctrlpvim/ctrlp.vim' "obsolete
+Plug 'Shougo/denite.nvim'
+call plug#end()
 """""""""""""""""""YCM""""""""""""
 let g:ycm_confirm_extra_conf = 0 "confirm loading .ycm_extra_conf.py at startup
-let g:ycm_global_ycm_extra_conf = '~/.vim/bundle/YouCompleteMe/.ycm_extra_conf.py' "fallback
+let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/.ycm_extra_conf.py' "fallback
 let g:ycm_collect_identifiers_from_tags_files = 0
-"let g:ycm_semantic_triggers =  {
-"  \   'c' : ['->', '.'],
-"  \   'objc' : ['->', '.', 're!\[[_a-zA-Z]+\w*\s', 're!^\s*[^\W\d]\w*\s',
-"  \             're!\[.*\]\s'],
-"  \   'ocaml' : ['.', '#'],
-"  \   'cpp,objcpp' : ['->', '.', '::'],
-"  \   'perl' : ['->'],
-"  \   'php' : ['->', '::'],
-"  \   'cs,java,javascript,typescript,d,python,perl6,scala,vb,elixir,go' : ['.'],
-"  \   'ruby' : ['.', '::'],
-"  \   'lua' : ['.', ':'],
-"  \   'erlang' : [':'],
-"  \ }
+let g:ycm_key_invoke_completion = '<c-z>'
+let g:ycm_semantic_triggers =  {
+            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+            \ 'cs,lua,javascript': ['re!\w{2}'],
+            \ }
 """"""""""""""""""""" vim-gutentags """"""""""""""""""""""""""""
 " ctags
 set tags=./tags;,tags
 let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
 let g:gutentags_ctags_tagfile = '.tags'
 let s:vim_tags = expand('~/.cache/tags')
+let g:gutentags_modules = []
+if executable('ctags')
+    let g:gutentags_modules += ['ctags']
+endif
+if executable('gtags-cscope') && executable('gtags')
+    let g:gutentags_modules += ['gtags_cscope']
+endif
 let g:gutentags_cache_dir = s:vim_tags
 let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
 let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
 let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
 if !isdirectory(s:vim_tags)
     silent! call mkdir(s:vim_tags, 'p')
 endif
+let g:gutentags_auto_add_gtags_cscope = 0
 
 """""""""""""""""""asyncrun""""""""""""""""""
 let g:asyncrun_open = 6
@@ -88,13 +94,29 @@ nmap <C-c> <ESC>
 nmap <F2> :set hlsearch!<CR>
 nmap <F3> :set paste!<CR>
 nmap <F5> :set number!<CR>
-imap <C-K> <C-Space>
-nnoremap tn :tabnew
-nnoremap tj :tabnext<CR>
-nnoremap tk :tabnext<CR>
+"nnoremap tn :tabnew
+"nnoremap tj :tabnext<CR>
+"nnoremap tk :tabnext<CR>
 " nnoremap <C-L> <C-]>
-nnoremap <C-]> :YcmCompleter GoTo<CR>
+" nnoremap <M-j> <C-W>j
+" nnoremap <M-k> <C-W>k
+" nnoremap <M-l> <C-W>l
+" nnoremap <M-h> <C-W>h
+nnoremap {`}j <C-W>j
+nnoremap {`}k <C-W>k
+nnoremap {`}l <C-W>l
+nnoremap {`}h <C-W>h
+
+inoremap <M-j> <ESC><C-W>j
+inoremap <M-k> <ESC><C-W>k
+inoremap <M-l> <ESC><C-W>l
+inoremap <M-h> <ESC><C-W>h
+nnoremap <silent> <leader>g :YcmCompleter GoTo<CR>
+"nnoremap <silent> <leader>cn :cnext<CR>
+"nnoremap <silent> <leader>cp :cprev<CR>
 set shiftwidth=4
 set softtabstop=4
 set tabstop=4
 set expandtab
+autocmd FileType qf nnoremap <silent><buffer> o :PreviewQuickfix<cr>
+autocmd FileType qf nnoremap <silent><buffer> c :PreviewClose<cr>
