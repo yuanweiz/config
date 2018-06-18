@@ -88,9 +88,6 @@ let g:ale_cpp_cppcheck_options = ''
 
 """""""""""""""" YWZ's configuration """"""""""""""""""
 nmap <C-N> :NERDTree<CR>
-nmap <C-J> :bn<CR>
-nmap <C-k> :bp<CR>
-nmap <C-c> <ESC>
 nmap <F2> :set hlsearch!<CR>
 nmap <F3> :set paste!<CR>
 nmap <F5> :set number!<CR>
@@ -111,12 +108,16 @@ inoremap <M-j> <ESC><C-W>j
 inoremap <M-k> <ESC><C-W>k
 inoremap <M-l> <ESC><C-W>l
 inoremap <M-h> <ESC><C-W>h
-nnoremap <silent> <leader>g :YcmCompleter GoTo<CR>
+nnoremap <silent> <leader>] :YcmCompleter GoTo<CR>
 "nnoremap <silent> <leader>cn :cnext<CR>
 "nnoremap <silent> <leader>cp :cprev<CR>
 set shiftwidth=4
 set softtabstop=4
 set tabstop=4
 set expandtab
+
+""""""""""""""""" vim-preview """"""""""""""""""""""""""
 autocmd FileType qf nnoremap <silent><buffer> o :PreviewQuickfix<cr>
 autocmd FileType qf nnoremap <silent><buffer> c :PreviewClose<cr>
+autocmd FileType qf nnoremap <silent><buffer> J :PreviewScroll +1<cr>
+autocmd FileType qf nnoremap <silent><buffer> K :PreviewScroll -1<cr>
