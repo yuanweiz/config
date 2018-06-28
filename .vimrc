@@ -33,7 +33,8 @@ Plug 'tpope/vim-sensible'
 Plug 'skywind3000/vim-preview'
 Plug 'skywind3000/gutentags_plus'
 " Plug 'ctrlpvim/ctrlp.vim' "obsolete
-Plug 'Shougo/denite.nvim'
+" Plug 'Shougo/denite.nvim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'   }
 call plug#end()
 """""""""""""""""""YCM""""""""""""
 let g:ycm_confirm_extra_conf = 0 "confirm loading .ycm_extra_conf.py at startup
@@ -109,12 +110,14 @@ inoremap <M-k> <ESC><C-W>k
 inoremap <M-l> <ESC><C-W>l
 inoremap <M-h> <ESC><C-W>h
 nnoremap <silent> <leader>] :YcmCompleter GoTo<CR>
+nnoremap <leader>f :FZF<CR>
 "nnoremap <silent> <leader>cn :cnext<CR>
 "nnoremap <silent> <leader>cp :cprev<CR>
 set shiftwidth=4
 set softtabstop=4
 set tabstop=4
 set expandtab
+set mouse=a
 
 """"""""""""""""" vim-preview """"""""""""""""""""""""""
 autocmd FileType qf nnoremap <silent><buffer> o :PreviewQuickfix<cr>
