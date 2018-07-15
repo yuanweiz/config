@@ -17,7 +17,7 @@ Plug 'ludovicchabant/vim-gutentags'
 Plug 'Valloric/YouCompleteMe'
 " Using a non-master branch
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-Plug 'jiangmiao/auto-pairs'
+" Plug 'jiangmiao/auto-pairs'
 
 " Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
 " Plug 'fatih/vim-go', { 'tag': '*' }
@@ -34,6 +34,8 @@ Plug 'skywind3000/vim-preview'
 Plug 'skywind3000/gutentags_plus'
 " Plug 'ctrlpvim/ctrlp.vim' "obsolete
 Plug 'Shougo/denite.nvim'
+"Plug '~/.fzf'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
 call plug#end()
 """""""""""""""""""YCM""""""""""""
 let g:ycm_confirm_extra_conf = 0 "confirm loading .ycm_extra_conf.py at startup
@@ -51,12 +53,12 @@ let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
 let g:gutentags_ctags_tagfile = '.tags'
 let s:vim_tags = expand('~/.cache/tags')
 let g:gutentags_modules = []
-if executable('ctags')
-    let g:gutentags_modules += ['ctags']
-endif
-if executable('gtags-cscope') && executable('gtags')
-    let g:gutentags_modules += ['gtags_cscope']
-endif
+" if executable('ctags')
+"     let g:gutentags_modules += ['ctags']
+" endif
+" if executable('gtags-cscope') && executable('gtags')
+"     let g:gutentags_modules += ['gtags_cscope']
+" endif
 let g:gutentags_cache_dir = s:vim_tags
 let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
 let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
@@ -87,6 +89,7 @@ let g:ale_c_cppcheck_options = ''
 let g:ale_cpp_cppcheck_options = ''
 
 """""""""""""""" YWZ's configuration """"""""""""""""""
+colorscheme torte
 nmap <C-N> :NERDTree<CR>
 nmap <F2> :set hlsearch!<CR>
 nmap <F3> :set paste!<CR>
@@ -103,6 +106,17 @@ nnoremap {`}j <C-W>j
 nnoremap {`}k <C-W>k
 nnoremap {`}l <C-W>l
 nnoremap {`}h <C-W>h
+nnoremap <leader>f :FZF<CR>
+nnoremap <leader>1 :tab 1<CR>
+nnoremap <leader>2 :tab 2<CR>
+nnoremap <leader>3 :tab 3<CR>
+nnoremap <leader>4 :tab 4<CR>
+nnoremap <leader>5 :tab 5<CR>
+nnoremap <leader>6 :tab 6<CR>
+nnoremap <leader>7 :tab 7<CR>
+nnoremap <leader>8 :tab 8<CR>
+nnoremap <leader>9 :tab 9<CR>
+set mouse=a
 
 inoremap <M-j> <ESC><C-W>j
 inoremap <M-k> <ESC><C-W>k
