@@ -24,7 +24,7 @@ Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 Plug 'fatih/vim-go'
 
 " Plugin options
-Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
+" Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 " Initialize plugin system
 Plug 'skywind3000/asyncrun.vim'
 Plug 'w0rp/ale'
@@ -33,8 +33,10 @@ Plug 'tpope/vim-sensible'
 Plug 'skywind3000/vim-preview'
 Plug 'skywind3000/gutentags_plus'
 " Plug 'ctrlpvim/ctrlp.vim' "obsolete
-"Plug 'Shougo/denite.nvim'
+Plug 'Shougo/denite.nvim'
+"Plug '~/.fzf'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
+Plug 'kien/rainbow_parentheses.vim'
 call plug#end()
 """""""""""""""""""YCM""""""""""""
 let g:ycm_confirm_extra_conf = 0 "confirm loading .ycm_extra_conf.py at startup
@@ -47,17 +49,22 @@ let g:ycm_semantic_triggers =  {
             \ }
 """"""""""""""""""""" vim-gutentags """"""""""""""""""""""""""""
 " ctags
+
+let g:gutentags_enabled = 0
+let g:gutentags_define_advanced_commands = 1
+let $GTAGSLABEL = 'native-pygments'
+let $GTAGSCONF = '/usr/share/gtags/gtags.conf' " expand('~/.globalrc')
 set tags=./tags;,tags
 let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
 let g:gutentags_ctags_tagfile = '.tags'
 let s:vim_tags = expand('~/.cache/tags')
 let g:gutentags_modules = []
-" if executable('ctags')
-"     let g:gutentags_modules += ['ctags']
-" endif
-" if executable('gtags-cscope') && executable('gtags')
-"     let g:gutentags_modules += ['gtags_cscope']
-" endif
+if executable('ctags')
+    let g:gutentags_modules += ['ctags']
+endif
+if executable('gtags-cscope') && executable('gtags')
+    let g:gutentags_modules += ['gtags_cscope']
+endif
 let g:gutentags_cache_dir = s:vim_tags
 let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
 let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
@@ -73,19 +80,22 @@ let g:asyncrun_open = 6
 let g:asyncrun_bell = 1
 nnoremap <F10> :call asyncrun#quickfix_toggle(6)<cr>
 """"""""""""""""""ale linting""""""""""""""
+"let g:ale_enabled=1
 let g:ale_linters_explicit = 1
-let g:ale_completion_delay = 500
-let g:ale_echo_delay = 20
-let g:ale_lint_delay = 500
+let g:ale_set_loclist=0
+let g:ale_set_quickfix=1
+"let g:ale_completion_delay = 500
+"let g:ale_echo_delay = 20
+"let g:ale_lint_delay = 500
 let g:ale_echo_msg_format = '[%linter%] %code: %%s'
-let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_text_changed = 'always' " normal
 let g:ale_lint_on_insert_leave = 1
-let g:airline#extensions#ale#enabled = 1
-
-let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
-let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++11'
-let g:ale_c_cppcheck_options = ''
-let g:ale_cpp_cppcheck_options = ''
+"
+let g:ale_linters = {'go': ['go build']} "TODO: 'go vet' doesn't work well
+"let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
+"let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++11'
+"let g:ale_c_cppcheck_options = ''
+"let g:ale_cpp_cppcheck_options = ''
 
 """""""""""""""" YWZ's configuration """"""""""""""""""
 colorscheme torte
@@ -106,33 +116,45 @@ nnoremap {`}k <C-W>k
 nnoremap {`}l <C-W>l
 nnoremap {`}h <C-W>h
 nnoremap <leader>f :FZF<CR>
-nnoremap <leader>1 :tab 1<CR>
-nnoremap <leader>2 :tab 2<CR>
-nnoremap <leader>3 :tab 3<CR>
-nnoremap <leader>4 :tab 4<CR>
-nnoremap <leader>5 :tab 5<CR>
-nnoremap <leader>6 :tab 6<CR>
-nnoremap <leader>7 :tab 7<CR>
-nnoremap <leader>8 :tab 8<CR>
-nnoremap <leader>9 :tab 9<CR>
+nnoremap <leader>1 1gt<CR>
+nnoremap <leader>2 2gt<CR>
+nnoremap <leader>3 3gt<CR>
+nnoremap <leader>4 4gt<CR>
+nnoremap <leader>5 5gt<CR>
+nnoremap <leader>6 6gt<CR>
+nnoremap <leader>7 7gt<CR>
+nnoremap <leader>8 8gt<CR>
+nnoremap <leader>9 9gt<CR>
+nnoremap <leader>rp :RainbowParenthesesToggleAll<CR>
+
+nnoremap <C-j> :wincmd j<CR>
+nnoremap <C-k> :wincmd k<CR>
+nnoremap <C-l> :wincmd l<CR>
+nnoremap <C-h> :wincmd h<CR>
+
+nnoremap <silent> <leader>y :call system('tmux set-buffer ' . expand('<cword>'))<CR>
+nnoremap <silent> <leader>ln :call system('tmux set-buffer "'. expand('%:p').':'.line('.').'"')<CR>
 set mouse=a
 
-inoremap <M-j> <ESC><C-W>j
-inoremap <M-k> <ESC><C-W>k
-inoremap <M-l> <ESC><C-W>l
-inoremap <M-h> <ESC><C-W>h
-nnoremap <silent> <leader>] :YcmCompleter GoTo<CR>
-nnoremap <leader>f :FZF<CR>
+au FileType go nnoremap <leader>gd :GoDecls<CR>
+
+nnoremap <leader>] :YcmCompleter GoTo<CR>
 "nnoremap <silent> <leader>cn :cnext<CR>
 "nnoremap <silent> <leader>cp :cprev<CR>
 set shiftwidth=4
 set softtabstop=4
 set tabstop=4
 set expandtab
-set mouse=a
 
 """"""""""""""""" vim-preview """"""""""""""""""""""""""
 autocmd FileType qf nnoremap <silent><buffer> o :PreviewQuickfix<cr>
 autocmd FileType qf nnoremap <silent><buffer> c :PreviewClose<cr>
 autocmd FileType qf nnoremap <silent><buffer> J :PreviewScroll +1<cr>
 autocmd FileType qf nnoremap <silent><buffer> K :PreviewScroll -1<cr>
+"""""""""""""""" vim-go """""""""""""""""""""""
+let g:go_auto_type_info = 1
+let g:go_decls_mode = 'fzf'
+let g:go_def_mapping_enabled = 1
+
+""""""""""""""""""rainbow parentheses""""""""""""""
+let g:rbpt_loadcmd_toggle = 1
