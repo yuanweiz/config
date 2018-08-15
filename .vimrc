@@ -126,12 +126,13 @@ nnoremap <leader>7 7gt<CR>
 nnoremap <leader>8 8gt<CR>
 nnoremap <leader>9 9gt<CR>
 nnoremap <leader>rp :RainbowParenthesesToggleAll<CR>
+nnoremap <leader>cp :cprev<cr>
+nnoremap <leader>cn :cnext<cr>
 
 nnoremap <C-j> :wincmd j<CR>
 nnoremap <C-k> :wincmd k<CR>
 nnoremap <C-l> :wincmd l<CR>
 nnoremap <C-h> :wincmd h<CR>
-
 nnoremap <silent> <leader>y :call system('tmux set-buffer ' . expand('<cword>'))<CR>
 nnoremap <silent> <leader>ln :call system('tmux set-buffer "'. expand('%:p').':'.line('.').'"')<CR>
 set mouse=a
@@ -158,3 +159,7 @@ let g:go_def_mapping_enabled = 1
 
 """"""""""""""""""rainbow parentheses""""""""""""""
 let g:rbpt_loadcmd_toggle = 1
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
