@@ -102,7 +102,8 @@ colorscheme torte
 nmap <C-N> :NERDTree<CR>
 nmap <F2> :set hlsearch!<CR>
 nmap <F3> :set paste!<CR>
-nmap <F5> :set number!<CR>
+nmap <F4> :set number!<CR>
+nmap <F5> :redraw!<CR>
 "nnoremap tn :tabnew
 "nnoremap tj :tabnext<CR>
 "nnoremap tk :tabnext<CR>
