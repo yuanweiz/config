@@ -2,10 +2,6 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-if [ -e "$HOME/extra_config.sh" ]
-then
-    source "$HOME/extra_config.sh"
-fi
 export ZSH="$HOME/.oh-my-zsh"
 
 # Set name of the theme to load. Optionally, if you set this to "random"
@@ -103,3 +99,7 @@ source $ZSH/oh-my-zsh.sh
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/z/z.sh ] && source ~/z/z.sh
+if [ -e "$HOME/extra_config.sh" ]
+then
+    source "$HOME/extra_config.sh"
+fi
