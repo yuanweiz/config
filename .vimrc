@@ -12,8 +12,8 @@ let mapleader="\<space>"
 call plug#begin('~/.vim/plugged')
 " Make sure you use single quotes
 " On-demand loading
-Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'ludovicchabant/vim-gutentags'
+" Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
+" Plug 'ludovicchabant/vim-gutentags'
 Plug 'Valloric/YouCompleteMe'
 " Using a non-master branch
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
@@ -26,14 +26,14 @@ Plug 'fatih/vim-go'
 " Plugin options
 " Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
 " Initialize plugin system
-Plug 'skywind3000/asyncrun.vim'
+" Plug 'skywind3000/asyncrun.vim'
 Plug 'w0rp/ale'
-Plug 'sillybun/vim-repl'
+" Plug 'sillybun/vim-repl'
 Plug 'tpope/vim-sensible'
-Plug 'skywind3000/vim-preview'
-Plug 'skywind3000/gutentags_plus'
+" Plug 'skywind3000/vim-preview'
+" Plug 'skywind3000/gutentags_plus'
 " Plug 'ctrlpvim/ctrlp.vim' "obsolete
-Plug 'Shougo/denite.nvim'
+" Plug 'Shougo/denite.nvim'
 "Plug '~/.fzf'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
 Plug 'kien/rainbow_parentheses.vim'
@@ -136,7 +136,7 @@ nnoremap <C-l> :wincmd l<CR>
 nnoremap <C-h> :wincmd h<CR>
 nnoremap <silent> <leader>y :call system('tmux set-buffer ' . expand('<cword>'))<CR>
 nnoremap <silent> <leader>ln :call system('tmux set-buffer "'. expand('%:p').':'.line('.').'"')<CR>
-set mouse=a
+set mouse=
 
 au FileType go nnoremap <leader>gd :GoDecls<CR>
 
