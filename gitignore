@@ -1,4 +1,5 @@
 # git config --global core.excludesfile
+# git config --global diff.tool vimdiff
 .ycm_extra_conf.py
 jsconfig.json
 tsconfig.json

@@ -1,6 +1,6 @@
 set nocompatible              " be iMproved, required
-filetype off                  " required
 set encoding=utf-8
+filetype off                  " required
 filetype plugin indent on    " required
 syntax on
 let mapleader="\<space>"
@@ -10,33 +10,16 @@ let mapleader="\<space>"
 " " - For Neovim: ~/.local/share/nvim/plugged
 " " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
-" Make sure you use single quotes
-" On-demand loading
-" Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-" Plug 'ludovicchabant/vim-gutentags'
-Plug 'Valloric/YouCompleteMe'
-" Using a non-master branch
+" Plug 'Valloric/YouCompleteMe'
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-" Plug 'jiangmiao/auto-pairs'
-
-" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
-" Plug 'fatih/vim-go', { 'tag': '*' }
-Plug 'fatih/vim-go'
-
-" Plugin options
-" Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
-" Initialize plugin system
-" Plug 'skywind3000/asyncrun.vim'
 Plug 'w0rp/ale'
-" Plug 'sillybun/vim-repl'
 Plug 'tpope/vim-sensible'
-" Plug 'skywind3000/vim-preview'
-" Plug 'skywind3000/gutentags_plus'
-" Plug 'ctrlpvim/ctrlp.vim' "obsolete
-" Plug 'Shougo/denite.nvim'
-"Plug '~/.fzf'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
 Plug 'kien/rainbow_parentheses.vim'
+" Plug 'fatih/vim-go'
+" Plug 'guns/vim-sexp',    {'for': 'clojure'}
+" Plug 'liquidz/vim-iced', {'for': 'clojure'}
+
 call plug#end()
 """""""""""""""""""YCM""""""""""""
 let g:ycm_confirm_extra_conf = 0 "confirm loading .ycm_extra_conf.py at startup
@@ -75,18 +58,10 @@ if !isdirectory(s:vim_tags)
 endif
 let g:gutentags_auto_add_gtags_cscope = 0
 
-"""""""""""""""""""asyncrun""""""""""""""""""
-let g:asyncrun_open = 6
-let g:asyncrun_bell = 1
-nnoremap <F10> :call asyncrun#quickfix_toggle(6)<cr>
 """"""""""""""""""ale linting""""""""""""""
-"let g:ale_enabled=1
 let g:ale_linters_explicit = 1
 let g:ale_set_loclist=0
 let g:ale_set_quickfix=1
-"let g:ale_completion_delay = 500
-"let g:ale_echo_delay = 20
-"let g:ale_lint_delay = 500
 let g:ale_echo_msg_format = '[%linter%] %code: %%s'
 let g:ale_lint_on_text_changed = 'always' " normal
 let g:ale_lint_on_insert_leave = 1
@@ -97,25 +72,23 @@ let g:ale_linters = {'go': ['go build']} "TODO: 'go vet' doesn't work well
 "let g:ale_c_cppcheck_options = ''
 "let g:ale_cpp_cppcheck_options = ''
 
-"""""""""""""""" YWZ's configuration """"""""""""""""""
+"""""""""""""""" key mappings """"""""""""""""""
 colorscheme torte
+hi Normal guibg=NONE ctermbg=NONE
 nmap <C-N> :NERDTree<CR>
 nmap <F2> :set hlsearch!<CR>
 nmap <F3> :set paste!<CR>
 nmap <F4> :set number!<CR>
 nmap <F5> :redraw!<CR>
-"nnoremap tn :tabnew
-"nnoremap tj :tabnext<CR>
-"nnoremap tk :tabnext<CR>
-" nnoremap <C-L> <C-]>
-" nnoremap <M-j> <C-W>j
-" nnoremap <M-k> <C-W>k
-" nnoremap <M-l> <C-W>l
-" nnoremap <M-h> <C-W>h
-nnoremap {`}j <C-W>j
-nnoremap {`}k <C-W>k
-nnoremap {`}l <C-W>l
-nnoremap {`}h <C-W>h
+
+" moving cursor without exiting insert mode
+inoremap <C-J> <Down>
+inoremap <C-H> <Left>
+inoremap <C-K> <Up>
+inoremap <C-L> <Right>
+inoremap <C-B> <C-O>b
+inoremap <C-E> <C-O>e
+
 nnoremap <leader>f :FZF<CR>
 nnoremap <leader>1 1gt<CR>
 nnoremap <leader>2 2gt<CR>
@@ -134,15 +107,24 @@ nnoremap <C-j> :wincmd j<CR>
 nnoremap <C-k> :wincmd k<CR>
 nnoremap <C-l> :wincmd l<CR>
 nnoremap <C-h> :wincmd h<CR>
-nnoremap <silent> <leader>y :call system('tmux set-buffer ' . expand('<cword>'))<CR>
+
+function! YankToTmux() range
+    silent! normal gv"ny
+    silent! call system('tmux set-buffer ' . shellescape(@n) )
+endfunction
+nnoremap <silent> <leader>yw :call system('tmux set-buffer ' . expand('<cword>'))<CR>
+vnoremap <silent> <leader>y :call YankToTmux()<CR>
 nnoremap <silent> <leader>ln :call system('tmux set-buffer "'. expand('%:p').':'.line('.').'"')<CR>
+nnoremap <silent> <leader>ll :call system('tmux set-buffer "'. expand('%:p').'"')<CR>
 set mouse=
 
 au FileType go nnoremap <leader>gd :GoDecls<CR>
+au FileType go nnoremap <leader>] :YcmCompleter GoTo<CR>
+au FileType cpp nnoremap <leader>] :YcmCompleter GoTo<CR>
+au FileType ocaml nnoremap <leader>] :MerlinLocate<CR> 
+au FileType ocaml nnoremap <leader>t :MerlinTypeOf<CR>
+au FileType ocaml vnoremap <leader>t :MerlinTypeOfSel<CR>
 
-nnoremap <leader>] :YcmCompleter GoTo<CR>
-"nnoremap <silent> <leader>cn :cnext<CR>
-"nnoremap <silent> <leader>cp :cprev<CR>
 set shiftwidth=4
 set softtabstop=4
 set tabstop=4
@@ -153,10 +135,6 @@ autocmd FileType qf nnoremap <silent><buffer> o :PreviewQuickfix<cr>
 autocmd FileType qf nnoremap <silent><buffer> c :PreviewClose<cr>
 autocmd FileType qf nnoremap <silent><buffer> J :PreviewScroll +1<cr>
 autocmd FileType qf nnoremap <silent><buffer> K :PreviewScroll -1<cr>
-"""""""""""""""" vim-go """""""""""""""""""""""
-let g:go_auto_type_info = 1
-let g:go_decls_mode = 'fzf'
-let g:go_def_mapping_enabled = 1
 
 """"""""""""""""""rainbow parentheses""""""""""""""
 let g:rbpt_loadcmd_toggle = 1
@@ -164,3 +142,7 @@ au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
+
+if filereadable( $HOME . "/.vimrc.extra")
+    execute 'source '. $HOME . '/.vimrc.extra'
+endif
