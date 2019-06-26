@@ -82,10 +82,10 @@ nmap <F4> :set number!<CR>
 nmap <F5> :redraw!<CR>
 
 " moving cursor without exiting insert mode
-inoremap <C-J> <Down>
-inoremap <C-H> <Left>
-inoremap <C-K> <Up>
-inoremap <C-L> <Right>
+inoremap <C-J> <C-O>j
+inoremap <C-H> <C-O>h
+inoremap <C-K> <C-O>k
+inoremap <C-L> <C-O>l
 inoremap <C-B> <C-O>b
 inoremap <C-E> <C-O>e
 
