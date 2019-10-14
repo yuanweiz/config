@@ -12,27 +12,31 @@ set relativenumber
 " " - For Neovim: ~/.local/share/nvim/plugged
 " " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
-" Plug 'Valloric/YouCompleteMe'
+Plug 'Valloric/YouCompleteMe'
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 Plug 'w0rp/ale'
 Plug 'tpope/vim-sensible'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
+Plug 'junegunn/fzf.vim'
 Plug 'kien/rainbow_parentheses.vim'
-Plug 'fatih/vim-go'
-" Plug 'guns/vim-sexp',    {'for': 'clojure'}
-" Plug 'liquidz/vim-iced', {'for': 'clojure'}
 Plug 'easymotion/vim-easymotion'
-if filereadable("~/extra_plugin.vim")
-    source "~/extra_plugin.vim"
+Plug 'rafi/awesome-vim-colorschemes'
+Plug 'SirVer/ultisnips'
+Plug 'scrooloose/nerdtree'
+Plug 'Townk/vim-autoclose'
+if filereadable( $HOME . "/extra_plugin.vim")
+    exec 'source ' . $HOME . "/extra_plugin.vim"
 endif
 call plug#end()
 """""""""""""""""""YCM""""""""""""
 let g:ycm_confirm_extra_conf = 0 "confirm loading .ycm_extra_conf.py at startup
 let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/.ycm_extra_conf.py' "fallback
 let g:ycm_collect_identifiers_from_tags_files = 0
+let g:ycm_always_populate_location_list = 1
 let g:ycm_key_invoke_completion = '<c-z>'
+let g:ycm_filetype_whitelist = {'cpp': 1, 'python':1, 'c': 1, 'go': 1}
 let g:ycm_semantic_triggers =  {
-            \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
+            \ 'c,cpp,python,java,erlang,perl': ['re!\w{2}'],
             \ 'cs,lua,javascript': ['re!\w{2}'],
             \ }
 """"""""""""""""""""" vim-gutentags """"""""""""""""""""""""""""
@@ -78,17 +82,15 @@ let g:ale_linters = {'go': ['go build']} "TODO: 'go vet' doesn't work well
 "let g:ale_cpp_cppcheck_options = ''
 
 """""""""""""""" key mappings """"""""""""""""""
-colorscheme torte
+colorscheme deus
 hi Normal guibg=NONE ctermbg=NONE
-nmap <C-N> :NERDTree<CR>
+nmap <C-N> :NERDTreeToggle<CR>
 nmap <F2> :set hlsearch!<CR>
 nmap <F3> :set paste!<CR>
 nmap <F4> :set relativenumber!<CR>
 nmap <F5> :redraw!<CR>
 
 imap kjs <C-O>:w<CR>
-nmap <leader>f :FZF<CR>
-imap kjf <ESC>:FZF<CR>
 nmap <leader>1 1gt<CR>
 nmap <leader>2 2gt<CR>
 nmap <leader>3 3gt<CR>
@@ -101,7 +103,6 @@ nmap <leader>9 9gt<CR>
 nmap <leader>rp :RainbowParenthesesToggleAll<CR>
 nmap <leader>cp :cprev<cr>
 nmap <leader>cn :cnext<cr>
-
 nnoremap <C-j> :wincmd j<CR>
 nnoremap <C-k> :wincmd k<CR>
 nnoremap <C-l> :wincmd l<CR>
@@ -111,8 +112,14 @@ function! YankToTmux() range
     silent! normal gv"ny
     silent! call system('tmux set-buffer ' . shellescape(@n) )
 endfunction
+function! YankToClipBoard() range
+    silent! normal gv"ny
+    silent! call system("echo -n " . shellescape(@n) . " | nc localhost 9961")
+endfunction
+
 nnoremap <silent> <leader>yw :call system('tmux set-buffer ' . expand('<cword>'))<CR>
 vnoremap <silent> <leader>y :call YankToTmux()<CR>
+vnoremap <silent> <leader>Y :call YankToClipBoard()<CR>
 nnoremap <silent> <leader>ln :call system('tmux set-buffer "'. expand('%:p').':'.line('.').'"')<CR>
 nnoremap <silent> <leader>ll :call system('tmux set-buffer "'. expand('%:p').'"')<CR>
 set mouse=
@@ -120,6 +127,8 @@ set mouse=
 au FileType go nnoremap <leader>gd :GoDecls<CR>
 au FileType go nnoremap <leader>] :YcmCompleter GoTo<CR>
 au FileType cpp nnoremap <leader>] :YcmCompleter GoTo<CR>
+au FileType c nnoremap <leader>] :YcmCompleter GoTo<CR>
+au FileType python nnoremap <leader>] :YcmCompleter GoTo<CR>
 au FileType ocaml nnoremap <leader>] :MerlinLocate<CR> 
 au FileType ocaml nnoremap <leader>t :MerlinTypeOf<CR>
 au FileType ocaml vnoremap <leader>t :MerlinTypeOfSel<CR>
@@ -147,12 +156,49 @@ if filereadable( $HOME . "/.vimrc.extra")
 endif
 
 """"""""""""""""" easymotion """""""""""""""
-nmap <Leader>m <Plug>(easymotion-prefix)
+nmap <leader>m <Plug>(easymotion-prefix)
 nmap <Plug>(easymotion-prefix)f <Plug>(easymotion-overwin-f)
 nmap <Plug>(easymotion-prefix)m <Plug>(easymotion-overwin-f)
 nmap <Plug>(easymotion-prefix)j <Plug>(easymotion-overwin-line)
 nmap <Plug>(easymotion-prefix)w <Plug>(easymotion-overwin-w)
 
+nmap <leader>j <Plug>(easymotion-overwin-line)
+nmap <leader>s <Plug>(easymotion-overwin-f)
+nmap <leader>w <Plug>(easymotion-overwin-w)
+
+""""""""""""""""" UltiSnips """"""""""""""""""
+let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips']
+let g:UltiSnipsExpandTrigger = 'kf'
+
+"""""""""""""""""""""" fzf """""""""""""""""""""""
+let g:fzf_command_prefix = 'Fzf'
+
+function! s:get_git_root()
+  let root = split(system('git rev-parse --show-toplevel'), '\n')[0]
+  return v:shell_error ? '' : root
+endfunction
+
+function! FZF_cd()
+  let root = s:get_git_root()
+  if empty(root)
+    return s:warn('Not in git repo')
+  endif
+    return fzf#run({
+    \ 'source':  'git ls-files --exclude-standard | xargs dirname | sort | uniq',
+    \ 'dir':     root,
+    \ 'sink':    'cd',
+    \})
+endfunction
+nmap <leader>ff :FZF<CR>
+nmap <leader>fp :FzfGFiles --exclude-standard<CR>
+nmap <leader>fg :FzfRg<space>
+nmap <leader>fb :FzfBuffers<CR>
+nmap <leader>fc :FzfCommands<CR>
+nmap <leader>fd :call FZF_cd()<CR>
+imap kjf <ESC>:FZF<CR>
+
 if filereadable("~/extra_config.vim")
     source "~/extra_config.vim"
 endif
+
+
