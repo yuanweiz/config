@@ -62,6 +62,7 @@ DEFAULT_USER="ywz"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
+  vi-mode
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -95,9 +96,12 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # . /usr/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh
+export PATH=$PATH:$HOME/.cargo/bin
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/z/z.sh ] && source ~/z/z.sh
+unset WORDCHARS
+unsetopt AUTO_CD
 if [ -e "$HOME/extra_config.sh" ]
 then
     source "$HOME/extra_config.sh"
