@@ -12,7 +12,7 @@ set relativenumber
 " " - For Neovim: ~/.local/share/nvim/plugged
 " " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.vim/plugged')
-Plug 'Valloric/YouCompleteMe'
+" Plug 'Valloric/YouCompleteMe'
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
 Plug 'w0rp/ale'
 Plug 'tpope/vim-sensible'
@@ -24,6 +24,12 @@ Plug 'rafi/awesome-vim-colorschemes'
 Plug 'SirVer/ultisnips'
 Plug 'scrooloose/nerdtree'
 Plug 'Townk/vim-autoclose'
+Plug 'ncm2/ncm2'
+Plug 'roxma/nvim-yarp'
+Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 if filereadable( $HOME . "/extra_plugin.vim")
     exec 'source ' . $HOME . "/extra_plugin.vim"
 endif
@@ -90,7 +96,6 @@ nmap <F3> :set paste!<CR>
 nmap <F4> :set relativenumber!<CR>
 nmap <F5> :redraw!<CR>
 
-imap kjs <C-O>:w<CR>
 nmap <leader>1 1gt<CR>
 nmap <leader>2 2gt<CR>
 nmap <leader>3 3gt<CR>
@@ -168,7 +173,7 @@ nmap <leader>w <Plug>(easymotion-overwin-w)
 
 """"""""""""""""" UltiSnips """"""""""""""""""
 let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips']
-let g:UltiSnipsExpandTrigger = 'kf'
+let g:UltiSnipsExpandTrigger = 'qq'
 
 """""""""""""""""""""" fzf """""""""""""""""""""""
 let g:fzf_command_prefix = 'Fzf'
@@ -195,7 +200,6 @@ nmap <leader>fg :FzfRg<space>
 nmap <leader>fb :FzfBuffers<CR>
 nmap <leader>fc :FzfCommands<CR>
 nmap <leader>fd :call FZF_cd()<CR>
-imap kjf <ESC>:FZF<CR>
 
 if filereadable("~/extra_config.vim")
     source "~/extra_config.vim"
