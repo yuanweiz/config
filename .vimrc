@@ -14,7 +14,7 @@ set relativenumber
 call plug#begin('~/.vim/plugged')
 " Plug 'Valloric/YouCompleteMe'
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-Plug 'w0rp/ale'
+" Plug 'w0rp/ale'
 Plug 'tpope/vim-sensible'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
 Plug 'junegunn/fzf.vim'
@@ -64,14 +64,13 @@ endif
 let g:gutentags_auto_add_gtags_cscope = 0
 
 """"""""""""""""""ale linting""""""""""""""
-let g:ale_linters_explicit = 1
-let g:ale_set_loclist=0
-let g:ale_set_quickfix=1
-let g:ale_echo_msg_format = '[%linter%] %code: %%s'
-let g:ale_lint_on_text_changed = 'always' " normal
-let g:ale_lint_on_insert_leave = 1
-"
-let g:ale_linters = {'go': ['go build']} "TODO: 'go vet' doesn't work well
+"let g:ale_linters_explicit = 1
+"let g:ale_set_loclist=0
+"let g:ale_set_quickfix=1
+"let g:ale_echo_msg_format = '[%linter%] %code: %%s'
+"let g:ale_lint_on_text_changed = 'always' " normal
+"let g:ale_lint_on_insert_leave = 1
+"let g:ale_linters = {'go': ['go build']} "TODO: 'go vet' doesn't work well
 "let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
 "let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++11'
 "let g:ale_c_cppcheck_options = ''
@@ -205,8 +204,7 @@ autocmd BufEnter * call ncm2#enable_for_buffer()
 " IMPORTANT: :help Ncm2PopupOpen for more information
 set completeopt=noinsert,menuone,noselect
 
-" NOTE: you need to install completion sources to get completions. Check
-" our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
+autocmd BufWritePre *.go,*.c,*.cpp :call LanguageClient#textDocument_formatting_sync()
 
 if filereadable("~/extra_config.vim")
     source "~/extra_config.vim"
