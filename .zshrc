@@ -96,7 +96,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 # . /usr/lib/python3.6/site-packages/powerline/bindings/zsh/powerline.zsh
-export PATH=$HOME/.cargo/bin:$HOME/.local/bin:$PATH
+export PATH=$HOME/.cargo/bin:$HOME/.local/bin:$HOME/go/bin:$PATH
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f ~/z/z.sh ] && source ~/z/z.sh

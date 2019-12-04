@@ -30,23 +30,13 @@ Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
     \ }
+Plug 'ncm2/ncm2-bufword'
+Plug 'ncm2/ncm2-path'
+
 if filereadable( $HOME . "/extra_plugin.vim")
     exec 'source ' . $HOME . "/extra_plugin.vim"
 endif
 call plug#end()
-"""""""""""""""""""YCM""""""""""""
-let g:ycm_confirm_extra_conf = 0 "confirm loading .ycm_extra_conf.py at startup
-let g:ycm_global_ycm_extra_conf = '~/.vim/plugged/YouCompleteMe/.ycm_extra_conf.py' "fallback
-let g:ycm_collect_identifiers_from_tags_files = 0
-let g:ycm_always_populate_location_list = 1
-let g:ycm_key_invoke_completion = '<c-z>'
-let g:ycm_filetype_whitelist = {'cpp': 1, 'python':1, 'c': 1, 'go': 1}
-let g:ycm_semantic_triggers =  {
-            \ 'c,cpp,python,java,erlang,perl': ['re!\w{2}'],
-            \ 'cs,lua,javascript': ['re!\w{2}'],
-            \ }
-""""""""""""""""""""" vim-gutentags """"""""""""""""""""""""""""
-" ctags
 
 let g:gutentags_enabled = 0
 let g:gutentags_define_advanced_commands = 1
@@ -90,11 +80,11 @@ let g:ale_linters = {'go': ['go build']} "TODO: 'go vet' doesn't work well
 """""""""""""""" key mappings """"""""""""""""""
 colorscheme deus
 hi Normal guibg=NONE ctermbg=NONE
-nmap <C-N> :NERDTreeToggle<CR>
-nmap <F2> :set hlsearch!<CR>
-nmap <F3> :set paste!<CR>
-nmap <F4> :set relativenumber!<CR>
-nmap <F5> :redraw!<CR>
+nmap <silent> <C-N> :NERDTreeToggle<CR>
+nmap <silent> <F2> :set hlsearch!<CR>
+nmap <silent> <F3> :set paste!<CR>
+nmap <silent> <F4> :set relativenumber!<CR>
+nmap <silent> <F5> :redraw!<CR>
 
 nmap <leader>1 1gt<CR>
 nmap <leader>2 2gt<CR>
@@ -105,13 +95,13 @@ nmap <leader>6 6gt<CR>
 nmap <leader>7 7gt<CR>
 nmap <leader>8 8gt<CR>
 nmap <leader>9 9gt<CR>
-nmap <leader>rp :RainbowParenthesesToggleAll<CR>
-nmap <leader>cp :cprev<cr>
-nmap <leader>cn :cnext<cr>
-nnoremap <C-j> :wincmd j<CR>
-nnoremap <C-k> :wincmd k<CR>
-nnoremap <C-l> :wincmd l<CR>
-nnoremap <C-h> :wincmd h<CR>
+nmap <silent> <leader>rp :RainbowParenthesesToggleAll<CR>
+nmap <silent> <leader>cp :cprev<cr>
+nmap <silent> <leader>cn :cnext<cr>
+nnoremap <silent> <C-j> :wincmd j<CR>
+nnoremap <silent> <C-k> :wincmd k<CR>
+nnoremap <silent> <C-l> :wincmd l<CR>
+nnoremap <silent> <C-h> :wincmd h<CR>
 
 function! YankToTmux() range
     silent! normal gv"ny
@@ -129,14 +119,10 @@ nnoremap <silent> <leader>ln :call system('tmux set-buffer "'. expand('%:p').':'
 nnoremap <silent> <leader>ll :call system('tmux set-buffer "'. expand('%:p').'"')<CR>
 set mouse=
 
-au FileType go nnoremap <leader>gd :GoDecls<CR>
-au FileType go nnoremap <leader>] :YcmCompleter GoTo<CR>
-au FileType cpp nnoremap <leader>] :YcmCompleter GoTo<CR>
-au FileType c nnoremap <leader>] :YcmCompleter GoTo<CR>
-au FileType python nnoremap <leader>] :YcmCompleter GoTo<CR>
-au FileType ocaml nnoremap <leader>] :MerlinLocate<CR> 
-au FileType ocaml nnoremap <leader>t :MerlinTypeOf<CR>
-au FileType ocaml vnoremap <leader>t :MerlinTypeOfSel<CR>
+" au FileType go nnoremap <leader>gd :GoDecls<CR>
+" au FileType ocaml nnoremap <leader>] :MerlinLocate<CR> 
+" au FileType ocaml nnoremap <leader>t :MerlinTypeOf<CR>
+" au FileType ocaml vnoremap <leader>t :MerlinTypeOfSel<CR>
 
 set shiftwidth=4
 set softtabstop=4
@@ -194,15 +180,35 @@ function! FZF_cd()
     \ 'sink':    'cd',
     \})
 endfunction
-nmap <leader>ff :FZF<CR>
-nmap <leader>fp :FzfGFiles --exclude-standard<CR>
-nmap <leader>fg :FzfRg<space>
-nmap <leader>fb :FzfBuffers<CR>
-nmap <leader>fc :FzfCommands<CR>
-nmap <leader>fd :call FZF_cd()<CR>
+nmap <silent> <leader>ff :FZF<CR>
+nmap <silent> <leader>fp :FzfGFiles --exclude-standard<CR>
+nmap <silent> <leader>fg :FzfRg<space>
+nmap <silent> <leader>fb :FzfBuffers<CR>
+nmap <silent> <leader>fc :FzfCommands<CR>
+nmap <silent> <leader>fd :call FZF_cd()<CR>
+
+""""""""""""""""""""" lsp """"""""""""""""""""""""
+let g:LanguageClient_serverCommands = {
+    \ 'python': ['pyls'],
+    \ 'go': ['gopls'],
+    \ 'c': ['ccls', '--log-file=/tmp/cc.log'],
+    \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
+    \ }
+nnoremap <silent> <leader>lh :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> <leader>lg :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <leader>] :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> <leader>lr :call LanguageClient#textDocument_rename()<CR>
+
+" enable ncm2 for all buffers
+autocmd BufEnter * call ncm2#enable_for_buffer()
+
+" IMPORTANT: :help Ncm2PopupOpen for more information
+set completeopt=noinsert,menuone,noselect
+
+" NOTE: you need to install completion sources to get completions. Check
+" our wiki page for a list of sources: https://github.com/ncm2/ncm2/wiki
 
 if filereadable("~/extra_config.vim")
     source "~/extra_config.vim"
 endif
-
 
