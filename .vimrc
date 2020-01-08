@@ -6,6 +6,7 @@ syntax on
 let mapleader="\<space>"
 set number
 set relativenumber
+set cursorline
 
 """"""""""""""Plugin""""""""""""""""
 " Specify a directory for plugins
@@ -21,12 +22,15 @@ Plug 'junegunn/fzf.vim'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'easymotion/vim-easymotion'
 Plug 'rafi/awesome-vim-colorschemes'
+Plug 'morhetz/gruvbox'
 Plug 'SirVer/ultisnips'
 Plug 'scrooloose/nerdtree'
 Plug 'Townk/vim-autoclose'
 Plug 'itchyny/lightline.vim'
 Plug 'scrooloose/nerdcommenter'
+Plug 'skywind3000/asyncrun.vim'
 Plug 'ncm2/ncm2'
+Plug 'ncm2/float-preview.nvim'
 Plug 'roxma/nvim-yarp'
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
@@ -40,6 +44,17 @@ if filereadable( $HOME . "/extra_plugin.vim")
     exec 'source ' . $HOME . "/extra_plugin.vim"
 endif
 call plug#end()
+
+""""""""""""" utils """"""""""""""""""
+:lua << EOF
+local api = vim.api
+function rg_word_under_cursor_cmd()
+    local word = api.nvim_eval("expand('<cword>')")
+    api.nvim_command('FzfRg -w ' .. word)
+end
+EOF
+
+"""""""""""" gutentags """"""""""""""""""""""""
 
 set tags=./tags;,tags
 let g:gutentags_enabled = 1
@@ -73,7 +88,7 @@ endif
 "let g:ale_cpp_cppcheck_options = ''
 
 """""""""""""""" key mappings """"""""""""""""""
-colorscheme deus
+colorscheme gruvbox
 hi Normal guibg=NONE ctermbg=NONE
 nmap <silent> <C-N> :NERDTreeToggle<CR>
 nmap <silent> <F2> :set hlsearch!<CR>
@@ -97,6 +112,14 @@ nnoremap <silent> <C-j> :wincmd j<CR>
 nnoremap <silent> <C-k> :wincmd k<CR>
 nnoremap <silent> <C-l> :wincmd l<CR>
 nnoremap <silent> <C-h> :wincmd h<CR>
+nnoremap <silent> <leader>wj :wincmd j<CR>
+nnoremap <silent> <leader>wk :wincmd k<CR>
+nnoremap <silent> <leader>wl :wincmd l<CR>
+nnoremap <silent> <leader>wh :wincmd h<CR>
+nnoremap <silent> <leader>q :q<CR>
+nnoremap <silent> <leader>wq :wq<CR>
+nnoremap <silent> <leader>rc :e ~/.vimrc<CR>
+nnoremap <silent> <leader>wv :vsp<CR>
 
 function! YankToTmux() range
     silent! normal gv"ny
@@ -107,8 +130,8 @@ function! YankToClipBoard() range
     silent! call system("echo -n " . shellescape(@n) . " | nc localhost 9961")
 endfunction
 
-nnoremap <silent> <leader>yw :call system('tmux set-buffer ' . expand('<cword>'))<CR>
-vnoremap <silent> <leader>y :call YankToTmux()<CR>
+nnoremap <silent> <leader>yw "*y
+vnoremap <silent> <leader>y "*y
 vnoremap <silent> <leader>Y :call YankToClipBoard()<CR>
 nnoremap <silent> <leader>ln :call system('tmux set-buffer "'. expand('%:p').':'.line('.').'"')<CR>
 nnoremap <silent> <leader>ll :call system('tmux set-buffer "'. expand('%:p').'"')<CR>
@@ -150,7 +173,7 @@ nmap <Plug>(easymotion-prefix)w <Plug>(easymotion-overwin-w)
 
 nmap <leader>j <Plug>(easymotion-overwin-line)
 nmap <leader>s <Plug>(easymotion-overwin-f)
-nmap <leader>w <Plug>(easymotion-overwin-w)
+nmap <leader>ww <Plug>(easymotion-overwin-w)
 
 """"""""""""""""" UltiSnips """"""""""""""""""
 let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips']
@@ -177,7 +200,8 @@ function! FZF_cd()
 endfunction
 nmap <silent> <leader>ff :FZF<CR>
 nmap <silent> <leader>fp :FzfGFiles --exclude-standard<CR>
-nmap <silent> <leader>fg :FzfRg<space>
+nmap <leader>fg :FzfRg<space>
+nmap <leader>f* :lua rg_word_under_cursor_cmd()<CR>
 nmap <silent> <leader>fb :FzfBuffers<CR>
 nmap <silent> <leader>fc :FzfCommands<CR>
 nmap <silent> <leader>fd :call FZF_cd()<CR>
