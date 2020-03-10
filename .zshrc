@@ -62,6 +62,7 @@ DEFAULT_USER="ywz"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
+  mercurial
   vi-mode
 )
 
@@ -105,4 +106,9 @@ unsetopt AUTO_CD
 if [ -e "$HOME/extra_config.sh" ]
 then
     source "$HOME/extra_config.sh"
+fi
+
+if [ -e "$HOME/z.sh" ]
+then
+    source "$HOME/z.sh"
 fi
