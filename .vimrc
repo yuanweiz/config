@@ -21,6 +21,7 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all'  }
 Plug 'junegunn/fzf.vim'
 Plug 'kien/rainbow_parentheses.vim'
 Plug 'easymotion/vim-easymotion'
+Plug 't9md/vim-choosewin'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'morhetz/gruvbox'
 Plug 'SirVer/ultisnips'
@@ -174,6 +175,10 @@ nmap <Plug>(easymotion-prefix)w <Plug>(easymotion-overwin-w)
 nmap <leader>j <Plug>(easymotion-overwin-line)
 nmap <leader>s <Plug>(easymotion-overwin-f)
 nmap <leader>ww <Plug>(easymotion-overwin-w)
+
+"""""""""""""""""" choosewin """"""""""""""""
+nmap - <Plug>(choosewin)
+let g:choosewin_overlay_enable = 1
 
 """"""""""""""""" UltiSnips """"""""""""""""""
 let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips']
