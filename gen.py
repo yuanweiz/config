@@ -57,7 +57,7 @@ class Parser:
         while True:
             line = self.scanner.peek()
             if not line:
-                break
+                return
             if line[0] == LINE:
                 self.scanner.scan()
                 if keep:

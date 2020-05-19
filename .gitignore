@@ -3,3 +3,4 @@ i3.conf
 .zshrc
 *.swo
 *.swp
+nvim.vim
