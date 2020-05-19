@@ -24,21 +24,23 @@ Plug 'easymotion/vim-easymotion'
 Plug 'rafi/awesome-vim-colorschemes'
 Plug 'morhetz/gruvbox'
 Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 Plug 'scrooloose/nerdtree'
 Plug 'Townk/vim-autoclose'
 Plug 'itchyny/lightline.vim'
 Plug 'scrooloose/nerdcommenter'
 Plug 'skywind3000/asyncrun.vim'
-Plug 'ncm2/ncm2'
-Plug 'ncm2/float-preview.nvim'
+" Plug 'ncm2/ncm2'
+" Plug 'ncm2/float-preview.nvim'
 Plug 'roxma/nvim-yarp'
 Plug 'autozimu/LanguageClient-neovim', {
     \ 'branch': 'next',
     \ 'do': 'bash install.sh',
     \ }
-Plug 'ncm2/ncm2-bufword'
-Plug 'ncm2/ncm2-path'
+" Plug 'ncm2/ncm2-bufword'
+" Plug 'ncm2/ncm2-path'
 Plug 'ludovicchabant/vim-gutentags'
+Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
 
 if filereadable( $HOME . "/extra_plugin.vim")
     exec 'source ' . $HOME . "/extra_plugin.vim"
@@ -46,18 +48,17 @@ endif
 call plug#end()
 
 """"""""""""" utils """"""""""""""""""
-:lua << EOF
-local api = vim.api
-function rg_word_under_cursor_cmd()
-    local word = api.nvim_eval("expand('<cword>')")
-    api.nvim_command('FzfRg -w ' .. word)
-end
-EOF
+function s:rg_word_under_cursor()
+    let word = expand('<cword>')
+    return fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case -w -- ".shellescape(word), 1, fzf#vim#with_preview({})) " , s:p(<bang>0), <bang>0)
+endfunction
+
+command! FzfRgWordUnderCursor call s:rg_word_under_cursor()
 
 """""""""""" gutentags """"""""""""""""""""""""
 
 set tags=./tags;,tags
-let g:gutentags_enabled = 1
+let g:gutentags_enabled = 0
 let g:gutentags_define_advanced_commands = 1
 let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
 let g:gutentags_ctags_tagfile = '.tags'
@@ -106,8 +107,8 @@ nmap <leader>7 7gt<CR>
 nmap <leader>8 8gt<CR>
 nmap <leader>9 9gt<CR>
 nmap <silent> <leader>rp :RainbowParenthesesToggleAll<CR>
-nmap <silent> <leader>cp :cprev<cr>
-nmap <silent> <leader>cn :cnext<cr>
+nmap <silent> <leader>p :cprev<cr>
+nmap <silent> <leader>n :cnext<cr>
 nnoremap <silent> <C-j> :wincmd j<CR>
 nnoremap <silent> <C-k> :wincmd k<CR>
 nnoremap <silent> <C-l> :wincmd l<CR>
@@ -160,10 +161,6 @@ au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
 
-if filereadable( $HOME . "/.vimrc.extra")
-    execute 'source '. $HOME . '/.vimrc.extra'
-endif
-
 """"""""""""""""" easymotion """""""""""""""
 nmap <leader>m <Plug>(easymotion-prefix)
 nmap <Plug>(easymotion-prefix)f <Plug>(easymotion-overwin-f)
@@ -176,8 +173,10 @@ nmap <leader>s <Plug>(easymotion-overwin-f)
 nmap <leader>ww <Plug>(easymotion-overwin-w)
 
 """"""""""""""""" UltiSnips """"""""""""""""""
-let g:UltiSnipsSnippetDirectories = ['~/.vim/UltiSnips']
-let g:UltiSnipsExpandTrigger = 'qq'
+" let g:UltiSnipsExpandTrigger = 'qq'
+let g:UltiSnipsExpandTrigger = "<c-j>"
+let g:UltiSnipsJumpForwardTrigger = "<c-j>"
+let g:UltiSnipsJumpBackwardTrigger = "<c-k>"
 
 """""""""""""""""""""" fzf """""""""""""""""""""""
 let g:fzf_command_prefix = 'Fzf'
@@ -190,7 +189,6 @@ endfunction
 function! FZF_cd()
   let root = s:get_git_root()
   if empty(root)
-    return s:warn('Not in git repo')
   endif
     return fzf#run({
     \ 'source':  'git ls-files --exclude-standard | xargs dirname | sort | uniq',
@@ -201,32 +199,74 @@ endfunction
 nmap <silent> <leader>ff :FZF<CR>
 nmap <silent> <leader>fp :FzfGFiles --exclude-standard<CR>
 nmap <leader>fg :FzfRg<space>
-nmap <leader>f* :lua rg_word_under_cursor_cmd()<CR>
+nmap <leader>f* :FzfRgWordUnderCursor<CR>
 nmap <silent> <leader>fb :FzfBuffers<CR>
 nmap <silent> <leader>fc :FzfCommands<CR>
 nmap <silent> <leader>fd :call FZF_cd()<CR>
 
+
+""""""""" ncm2 """"""""""""""""""""""""
+"" enable ncm2 for all buffers
+"autocmd BufEnter * call ncm2#enable_for_buffer()
+"" IMPORTANT: :help Ncm2PopupOpen for more information
+"set completeopt=noinsert,menuone,noselect
+"set shortmess+=c
+""inoremap <c-c> <ESC>
+"inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+"inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+"
+"
+"""""""""""""" deoplete
+let g:deoplete#enable_at_startup = 1
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+
 """"""""""""""""""""" lsp """"""""""""""""""""""""
-let g:LanguageClient_serverCommands = {
-    \ 'python': ['pyls'],
-    \ 'go': ['gopls'],
-    \ 'c': ['ccls', '--log-file=/tmp/cc.log'],
-    \ 'cpp': ['ccls', '--log-file=/tmp/cc.log'],
-    \ }
+set signcolumn=yes
+let g:LanguageClient_serverCommands = {} " customized
 nnoremap <silent> <leader>lh :call LanguageClient#textDocument_hover()<CR>
 nnoremap <silent> <leader>lg :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <leader>] :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> <leader>lr :call LanguageClient#textDocument_rename()<CR>
 
-" enable ncm2 for all buffers
-autocmd BufEnter * call ncm2#enable_for_buffer()
+let g:LanguageClient_diagnosticsDisplay = {
+      \1: {
+      \    "name": "Error",
+      \    "texthl": "ALEError",
+      \    "signText": "x",
+      \    "signTexthl": "ALEErrorSign",
+      \    "virtualTexthl": "Error",
+      \},
+      \2: {
+      \    "name": "Warning",
+      \    "texthl": "ALEWarning",
+      \    "signText":  "!",            
+      \    "signTexthl": "ALEWarningSign",
+      \    "virtualTexthl": "Todo",
+      \},
+      \3: {
+      \    "name": "Information",
+      \    "texthl": "ALEInfo",
+      \    "signText": "ℹ",
+      \    "signTexthl": "ALEInfoSign",
+      \    "virtualTexthl": "Todo",
+      \},
+      \4: {
+      \    "name": "Hint",
+      \    "texthl": "ALEInfo",
+      \    "signText": ">",
+      \    "signTexthl": "ALEInfoSign",
+      \    "virtualTexthl": "Todo",
+      \},
+      \}
 
-" IMPORTANT: :help Ncm2PopupOpen for more information
-set completeopt=noinsert,menuone,noselect
+" autocmd BufWritePre *.go,*.c,*.cpp :call LanguageClient#textDocument_formatting_sync()
 
-autocmd BufWritePre *.go,*.c,*.cpp :call LanguageClient#textDocument_formatting_sync()
+let g:LanguageClient_loggingLevel = 'DEBUG'
+let g:LanguageClient_virtualTextPrefix = ''
+let g:LanguageClient_loggingFile =  expand('~/.local/share/nvim/LanguageClient.log')
+let g:LanguageClient_serverStderr = expand('~/.local/share/nvim/LanguageServer.log')
 
-if filereadable("~/extra_config.vim")
-    source "~/extra_config.vim"
+if filereadable($HOME . "/extra_config.vim")
+    exec 'source ' . $HOME . "/extra_config.vim"
 endif
 
